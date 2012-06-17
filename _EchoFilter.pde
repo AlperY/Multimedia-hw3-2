@@ -1,29 +1,30 @@
 public class EchoFilter implements AudioEffect {
  
-  int sdelay;
-  CyclicBuffer buffer;
+  CyclicBuffer leftB;
+  CyclicBuffer rightB;
   
   EchoFilter (float sampleRate, float tdelay) {
-    sdelay = (int) floor(sampleRate * tdelay * 2);
-    buffer = new CyclicBuffer(sdelay);
+    int sdelay = (int) floor(sampleRate * tdelay);
+    leftB = new CyclicBuffer(sdelay);
+    rightB = new CyclicBuffer(sdelay);
   }
   
   public void process (float[] signal) {
-    //float[] signaal = new float[signal.length];
     for (int i = 0; i < signal.length; i++) {
-      buffer.addSample(signal[i]);
-      signal[i] = (buffer.getSample(-1) + signal[i])/2;
+      leftB.addSample(signal[i]);
+      signal[i] = (leftB.getSample(-1) + signal[i])/2;
     }
-    
-   // arraycopy(signaal, signal);
-    
   }
   
   public void process (float[] left, float[] right) {
-    process(left);
-    process(right);
+    for (int i = 0; i < left.length; i++) {
+      leftB.addSample(left[i]);
+      left[i] = (leftB.getSample(-1) + left[i])/2;
+    }
+    for (int i = 0; i < right.length; i++) {
+      rightB.addSample(right[i]);
+      right[i] = (rightB.getSample(-1) + right[i])/2;
+    }
   }
-  
 }
-  
 

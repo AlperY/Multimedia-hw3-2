@@ -5,8 +5,8 @@ void setup() {
 
   Minim minim = new Minim(this);
   
-  AudioPlayer player = minim.loadFile("lvl_eagle.mp3", 16384);
+  AudioPlayer player = minim.loadFile("lvl_eagle.mp3");
   player.loop();
-  AudioEffect echo = new EchoFilter(player.getFormat().getSampleRate(), 10);
+  AudioEffect echo = new EchoFilter(player.getFormat().getSampleRate(), 1);
   player.addEffect(echo);
 }
